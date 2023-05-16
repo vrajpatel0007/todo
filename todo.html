@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body class="gradient-custom">
+    <style>
+        .container {
+            max-width: 1870px;
+        }
+
+        .gradient-custom {
+            background: radial-gradient(50% 123.47% at 50% 50%, #00ff94 0%, #720059 100%),
+                linear-gradient(121.28deg, #669600 0%, #ff0000 100%),
+                linear-gradient(360deg, #0029ff 0%, #8fff00 100%),
+                radial-gradient(100% 164.72% at 100% 100%, #6100ff 0%, #00ff57 100%),
+                radial-gradient(100% 148.07% at 0% 0%, #fff500 0%, #51d500 100%);
+            background-blend-mode: screen, color-dodge, overlay, difference, normal;
+        }
+
+        .todo {
+            width: 100vh;
+            height: 100vh;
+        }
+
+        .form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            display: flex;
+            background-color: white;
+            margin-top: 150px;
+            margin-left: 550px;
+            margin-bottom: 100px;
+            padding-top: 50px;
+            padding-left: 100px;
+            padding-right: 100px;
+            padding-bottom: 100px;
+            border-radius: 2%;
+            justify-content: center;
+        }
+
+        table tr td {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 45px;
+            padding-right: 45px;
+        }
+    </style>
+
+    <section class="todo ">
+        <div class="container">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-3">
+
+                    <div class="card">
+                        <div class="card-body p-5">
+
+                            <form class="form">
+                                <div class="form-outline flex-fill">
+                                    <input type="text" id="name" class="form-control" placeholder="New task..." />
+
+                                </div>
+                                <button onclick="save()" class="btn btn-info ms-2">Add</button>
+                                <button onclick="clearall()" class="btn btn-info ms-2">clear all</button>
+                            </form>
+                            <table border="1">
+                                <tr>
+                                    <td>todo list</td>
+                                    <td>delete</td>
+                                </tr>
+                                <tbody id="recod">
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript">
+    let data = [];
+    const save = () => {
+        let name = document.getElementById('name').value;
+        let opj = {
+            userid: Math.floor(Math.random() * 10000),
+            username: name
+        }
+        if (localStorage.getItem('crud') === null || localStorage.getItem('crud') === undefined) {
+            data.push(opj);
+            localStorage.setItem('crud', JSON.stringify(data));
+        }
+        else {
+            let val = JSON.parse(localStorage.getItem('crud'));
+            val.push(opj);
+            localStorage.setItem('crud', JSON.stringify(val));
+        }
+
+        alert("Record successfully insert");
+        document.getElementById('name').value = "";
+
+        viewdata();
+    }
+    const viewdata = () => {
+        let val = JSON.parse(localStorage.getItem('crud'));
+        let tbl = "";
+        for (let i in val) {
+            tbl +=
+                `
+                    <tr>
+                        <td>${val[i].username}</td>
+                        <td>
+                            <button class="btn btn-info ms-2" onclick="datadeleta(${val[i].userid})">delete</button>
+                        </td>
+                    </tr>
+                `
+        }
+        document.getElementById('recod').innerHTML = tbl;
+    }
+    viewdata();
+    const datadeleta = (userid) => {
+        let val = JSON.parse(localStorage.getItem('crud'));
+        for (let i in val) {
+            if (val[i].userid == userid) {
+                val.splice(i, 1);
+            }
+            localStorage.setItem('crud', JSON.stringify(val));
+        }
+        alert("record successfully deleta");
+        viewdata();
+    }
+    const clearall = () => {
+        let val=JSON.parse(localStorage.getItem('crud'));
+        for (let i in val) {
+                val.splice(i);
+            localStorage.setItem('crud', JSON.stringify(val));
+        }           
+        viewdata();
+    }
+</script>
+
+</html>
